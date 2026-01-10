@@ -1,9 +1,31 @@
+---@class WorkspacePickerColors
+---@field workspace_prefix string
+---@field zoxide_prefix string
+---@field current_indicator string
+---@field text string
+---@field path string
+
+---@class WorkspacePickerKeybind
+---@field mods string
+---@field key string
+
+---@class WorkspacePickerKeybinds
+---@field show_picker WorkspacePickerKeybind?
+---@field create_workspace WorkspacePickerKeybind?
+---@field rename_workspace WorkspacePickerKeybind?
+
+---@class WorkspacePickerConfig
+---@field zoxide_path string
+---@field colors WorkspacePickerColors
+---@field keybinds WorkspacePickerKeybinds|nil
+
 local wezterm = require("wezterm")
 local act = wezterm.action
 
 local M = {}
 
 -- Default configuration
+---@type WorkspacePickerConfig
 local default_config = {
 	-- Path to zoxide command
 	zoxide_path = "/opt/homebrew/bin/zoxide",
@@ -24,10 +46,14 @@ local default_config = {
 }
 
 -- Store user configuration
-local user_config = {}
+---@type WorkspacePickerConfig|nil
+local user_config
 
 -- Merge configuration
+---@param user_opts WorkspacePickerConfig|nil
+---@return WorkspacePickerConfig
 local function merge_config(user_opts)
+	---@type WorkspacePickerConfig
 	local config = {}
 	for k, v in pairs(default_config) do
 		if type(v) == "table" then
@@ -55,14 +81,17 @@ local function merge_config(user_opts)
 end
 
 -- Initialize configuration
+---@param opts WorkspacePickerConfig|nil
+---@return table
 function M.setup(opts)
 	user_config = merge_config(opts)
 	return M
 end
 
 -- Get directory list from zoxide
+---@return string[]
 local function get_zoxide_directories()
-	local config = user_config.zoxide_path and user_config or default_config
+	local config = user_config or default_config
 	local zoxide_cmd = config.zoxide_path .. " query -l 2>/dev/null"
 
 	local handle = io.popen(zoxide_cmd)
@@ -88,10 +117,19 @@ local function get_zoxide_directories()
 end
 
 -- Display workspace selector
+---@param window any -- wezterm.Window
+---@param pane any   -- wezterm.Pane
+---@return nil
 function M.show_workspace_selector(window, pane)
-	local config = user_config.zoxide_path and user_config or default_config
+	local config = user_config or default_config
 	local colors = config.colors
 	local current = wezterm.mux.get_active_workspace()
+
+	---@class WorkspacePickerChoice
+	---@field id string
+	---@field label string
+
+	---@type WorkspacePickerChoice[]
 	local choices = {}
 
 	-- Add existing workspace list
@@ -202,6 +240,7 @@ function M.show_workspace_selector(window, pane)
 end
 
 -- Rename workspace
+---@return any -- wezterm.Action
 function M.rename_workspace()
 	return act.PromptInputLine({
 		description = "(wezterm) Rename workspace title: ",
@@ -214,6 +253,7 @@ function M.rename_workspace()
 end
 
 -- Create new workspace manually
+---@return any -- wezterm.Action
 function M.create_workspace_manually()
 	return act.PromptInputLine({
 		description = "(wezterm) Create new workspace: ",
@@ -231,9 +271,12 @@ function M.create_workspace_manually()
 end
 
 -- Add keybindings to config
+---@param config table
+---@param opts WorkspacePickerConfig|nil
+---@return table
 function M.apply_to_config(config, opts)
 	-- Merge config (use opts if provided)
-	local cfg = opts and merge_config(opts) or (user_config.zoxide_path and user_config or default_config)
+	local cfg = opts and merge_config(opts) or (user_config or default_config)
 
 	-- Use existing keys table if available, otherwise create new one
 	if not config.keys then
