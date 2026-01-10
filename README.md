@@ -50,6 +50,14 @@ return config
 - Press `Enter` to select
 - Press `Esc` to cancel
 
+### Screenshots
+
+**Normal Mode:**
+<img src="images/picker-norm.png" alt="Normal Mode" width="600">
+
+**Fuzzy Search Mode:**
+<img src="images/picker-search.png" alt="Fuzzy Mode" width="600">
+
 ## Configuration
 
 ### Custom Setup
