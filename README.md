@@ -210,3 +210,4 @@ MIT License - see LICENSE file for details
 
 - [WezTerm](https://wezfurlong.org/wezterm/) - The amazing terminal emulator
 - [zoxide](https://github.com/ajeetdsouza/zoxide) - Smart directory jumper
+- Inspired by [smart_workspace_switcher.wezterm](https://github.com/MLFlexer/smart_workspace_switcher.wezterm)
