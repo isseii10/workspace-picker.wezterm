@@ -111,7 +111,7 @@ function M.show_workspace_selector(window, pane)
 				{ Foreground = { Color = colors.workspace_prefix } },
 				{ Text = "[Workspace]" },
 				{ Foreground = { Color = colors.text } },
-				{ Text = string.format(" %-30s ", name) },
+				{ Text = string.format(" %s ", name) },
 			})
 		end
 
