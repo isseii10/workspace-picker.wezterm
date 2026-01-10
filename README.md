@@ -53,9 +53,11 @@ return config
 ### Screenshots
 
 **Normal Mode:**
+<br>
 <img src="images/picker-norm.png" alt="Normal Mode" width="600">
 
 **Fuzzy Search Mode:**
+<br>
 <img src="images/picker-search.png" alt="Fuzzy Mode" width="600">
 
 ## Configuration
