@@ -7,6 +7,7 @@ WezTerm workspace switcher with [zoxide](https://github.com/ajeetdsouza/zoxide) 
 - 🚀 **Quick workspace switching** - Fuzzy search through existing workspaces
 - 📂 **Zoxide integration** - Create workspaces from your frequently accessed directories
 - 🎨 **Customizable colors** - Match your terminal theme
+- 🏷️ **Customizable labels** - Personalize workspace and directory labels
 - ⌨️ **Flexible keybindings** - Configure or disable default shortcuts
 - 🔍 **Fuzzy search** - Type `/` to search workspaces and directories
 
@@ -79,6 +80,13 @@ workspace_picker.setup({
 		current_indicator = "#9ece6a", -- Green for current workspace
 		text = "#c8d0e0",             -- Light gray for text
 		path = "#565f89",             -- Dark gray for paths
+	},
+
+	-- Custom labels
+	labels = {
+		workspace = "[Workspace]",    -- Label for workspace entries
+		zoxide = "[Zoxide]",          -- Label for zoxide entries
+		current = "<- current",        -- Indicator for current workspace
 	},
 
 	-- Custom keybindings (set to nil to disable)
@@ -171,6 +179,30 @@ workspace_picker.setup({
 		current_indicator = "#b8bb26",
 		text = "#ebdbb2",
 		path = "#928374",
+	},
+})
+```
+
+### Custom Labels
+
+**Using Emojis:**
+```lua
+workspace_picker.setup({
+	labels = {
+		workspace = "🏢",
+		zoxide = "📁",
+		current = "👈",
+	},
+})
+```
+
+**Shorter Labels:**
+```lua
+workspace_picker.setup({
+	labels = {
+		workspace = "[WS]",
+		zoxide = "[DIR]",
+		current = "●",
 	},
 })
 ```
