@@ -14,9 +14,15 @@
 ---@field create_workspace WorkspacePickerKeybind?
 ---@field rename_workspace WorkspacePickerKeybind?
 
+---@class WorkspacePickerLabels
+---@field workspace string
+---@field zoxide string
+---@field current string
+
 ---@class WorkspacePickerConfig
 ---@field zoxide_path string
 ---@field colors WorkspacePickerColors
+---@field labels WorkspacePickerLabels
 ---@field keybinds WorkspacePickerKeybinds|nil
 
 local wezterm = require("wezterm")
@@ -36,6 +42,12 @@ local default_config = {
 		current_indicator = "#9ece6a", -- Green
 		text = "#c8d0e0", -- Light gray
 		path = "#565f89", -- Dark gray
+	},
+	-- Label settings
+	labels = {
+		workspace = "[Workspace]",
+		zoxide = "[Zoxide]",
+		current = "<- current",
 	},
 	-- Keybind settings (set to nil to disable automatic setup)
 	keybinds = {
@@ -123,6 +135,7 @@ end
 function M.show_workspace_selector(window, pane)
 	local config = user_config or default_config
 	local colors = config.colors
+	local labels = config.labels
 	local current = wezterm.mux.get_active_workspace()
 
 	---@class WorkspacePickerChoice
@@ -138,16 +151,16 @@ function M.show_workspace_selector(window, pane)
 		if current == name then
 			label = wezterm.format({
 				{ Foreground = { Color = colors.workspace_prefix } },
-				{ Text = "[Workspace]" },
+				{ Text = labels.workspace },
 				{ Foreground = { Color = colors.text } },
 				{ Text = string.format(" %-30s ", name) },
 				{ Foreground = { Color = colors.current_indicator } },
-				{ Text = "<- current" },
+				{ Text = labels.current },
 			})
 		else
 			label = wezterm.format({
 				{ Foreground = { Color = colors.workspace_prefix } },
-				{ Text = "[Workspace]" },
+				{ Text = labels.workspace },
 				{ Foreground = { Color = colors.text } },
 				{ Text = string.format(" %s ", name) },
 			})
@@ -181,7 +194,7 @@ function M.show_workspace_selector(window, pane)
 			local dir_name = dir:match("([^/]+)$")
 			local label = wezterm.format({
 				{ Foreground = { Color = colors.zoxide_prefix } },
-				{ Text = "[Zoxide]" },
+				{ Text = labels.zoxide },
 				{ Foreground = { Color = colors.text } },
 				{ Text = " " .. dir_name .. " " },
 				{ Foreground = { Color = colors.path } },
