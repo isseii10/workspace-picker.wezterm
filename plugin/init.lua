@@ -191,7 +191,7 @@ function M.show_workspace_selector(window, pane)
 
 		for _, dir in ipairs(zoxide_dirs) do
 			-- Get directory name (last path element)
-			local dir_name = dir:match("([^/]+)$")
+			local dir_name = dir:match("([^/]+)$") or dir
 			local label = wezterm.format({
 				{ Foreground = { Color = colors.zoxide_prefix } },
 				{ Text = labels.zoxide },
